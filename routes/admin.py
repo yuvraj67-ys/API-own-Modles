@@ -1,4 +1,3 @@
-cat > routes/admin.py << 'EOF'
 from fastapi import APIRouter, Depends, HTTPException
 from models import SessionLocal, User
 from utils.auth import is_admin
@@ -27,4 +26,3 @@ def admin_users(api_key: str = Depends(is_admin)):
         return {"users": [{"id": u.id, "plan": u.plan, "banned": u.is_banned} for u in users]}
     finally:
         db.close()
-EOF
