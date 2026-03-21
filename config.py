@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     
     # Hugging Face
     HF_API_TOKEN: str = os.getenv("HF_API_TOKEN", "")
-    HF_IMAGE_MODEL: str = os.getenv("HF_IMAGE_MODEL", "stabilityai/stable-diffusion-2-1")
+    HF_IMAGE_MODEL: str = os.getenv("HF_IMAGE_MODEL", "black-forest-labs/FLUX.1-schnell")
     HF_SONG_MODEL: str = os.getenv("HF_SONG_MODEL", "facebook/musicgen-small")
     
     # Limits
