@@ -1,4 +1,3 @@
-cat > render.yaml << 'EOF'
 services:
   - type: web
     name: my-ai-api
@@ -30,4 +29,3 @@ services:
       name: uploads
       mountPath: /app/uploads
       sizeGB: 1
-EOF
