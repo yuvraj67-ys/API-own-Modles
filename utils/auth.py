@@ -24,7 +24,6 @@ def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
         if not key_record:
             raise HTTPException(status_code=401, detail="Invalid API key")
         
-        # Check if user is banned
         user = db.query(User).filter(User.id == key_record.user_id).first()
         if user and user.is_banned:
             raise HTTPException(status_code=403, detail="User banned")
@@ -32,6 +31,13 @@ def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
         return key_record.user_id
     finally:
         db.close()
+
+def is_admin(x_api_key: Optional[str] = Header(None)) -> bool:
+    """Check if API key is admin key"""
+    if not x_api_key:
+        return False
+    admin_keys = [k.strip() for k in settings._ADMIN_KEYS_STR.split(",") if k.strip()]
+    return x_api_key in admin_keys
 
 def generate_api_key() -> str:
     """Generate secure random API key"""
