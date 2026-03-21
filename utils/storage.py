@@ -1,4 +1,3 @@
-cat > utils/storage.py << 'EOF'
 import os
 import aiofiles
 from pathlib import Path
@@ -24,4 +23,3 @@ async def get_file(file_id: str) -> bytes:
             async with aiofiles.open(filepath, "rb") as f:
                 return await f.read()
     raise HTTPException(status_code=404, detail="File not found")
-EOF
