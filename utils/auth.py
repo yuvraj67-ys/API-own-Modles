@@ -1,5 +1,3 @@
-mkdir -p utils
-cat > utils/auth.py << 'EOF'
 from fastapi import Header, HTTPException, status
 from typing import Optional
 from models import SessionLocal, User, APIKey
@@ -9,20 +7,14 @@ import secrets
 def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
     if not x_api_key:
         raise HTTPException(status_code=401, detail="Missing API key")
-    
     db = SessionLocal()
     try:
-        key_record = db.query(APIKey).filter(
-            APIKey.key == x_api_key,
-            APIKey.is_active == True
-        ).first()
+        key_record = db.query(APIKey).filter(APIKey.key == x_api_key, APIKey.is_active == True).first()
         if not key_record:
             raise HTTPException(status_code=401, detail="Invalid API key")
-        
         user = db.query(User).filter(User.id == key_record.user_id).first()
         if user and user.is_banned:
             raise HTTPException(status_code=403, detail="User banned")
-        
         return key_record.user_id
     finally:
         db.close()
@@ -45,4 +37,3 @@ def create_user_api_key(user_id: str) -> str:
         return new_key
     finally:
         db.close()
-EOF
