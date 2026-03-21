@@ -1,4 +1,3 @@
-cat > README.md << 'EOF'
 # 🎨 My AI Hub API
 
 Personal AI API for Image & Song Generation using Hugging Face (Free Tier)
@@ -36,4 +35,3 @@ curl https://your-api.onrender.com/ping
 ## 📄 License
 
 MIT - Use freely!
-EOF
