@@ -1,4 +1,3 @@
-cat > routes/image.py << 'EOF'
 from fastapi import APIRouter, Depends, File, UploadFile, Form, HTTPException
 from typing import Optional
 from utils.auth import verify_api_key
@@ -10,11 +9,7 @@ import uuid
 router = APIRouter(prefix="/api/v1", tags=["images"])
 
 @router.post("/imagegen")
-async def generate_image(
-    prompt: str = Form(...),
-    user_id: str = Depends(verify_api_key),
-    aspect_ratio: str = Form("1:1")
-):
+async def generate_image(prompt: str = Form(...), user_id: str = Depends(verify_api_key), aspect_ratio: str = Form("1:1")):
     allowed, used, limit = check_limit(user_id, "imagegen")
     if not allowed:
         raise HTTPException(status_code=429, detail=f"Limit reached ({used}/{limit})")
@@ -28,12 +23,7 @@ async def generate_image(
         raise HTTPException(status_code=500, detail=f"Failed: {str(e)}")
 
 @router.post("/imageedit")
-async def edit_image(
-    prompt: str = Form(...),
-    image: UploadFile = File(...),
-    user_id: str = Depends(verify_api_key),
-    aspect_ratio: str = Form("1:1")
-):
+async def edit_image(prompt: str = Form(...), image: UploadFile = File(...), user_id: str = Depends(verify_api_key), aspect_ratio: str = Form("1:1")):
     if not image.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Must be image file")
     allowed, used, limit = check_limit(user_id, "imageedit")
@@ -48,4 +38,3 @@ async def edit_image(
         return {"success": True, "edited_url": file_url, "prompt": prompt, "usage": {"used": used+1, "limit": limit}}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed: {str(e)}")
-EOF
