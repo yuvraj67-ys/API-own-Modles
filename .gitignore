@@ -1,0 +1,36 @@
+# Create .gitignore to protect sensitive files
+cat > .gitignore << 'EOF'
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads & Database
+uploads/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+EOF
