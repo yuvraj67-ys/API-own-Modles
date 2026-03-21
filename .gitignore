@@ -1,6 +1,5 @@
-# Create .gitignore to protect sensitive files
 cat > .gitignore << 'EOF'
-# Environment variables
+# Environment
 .env
 .env.local
 .env.production
@@ -14,23 +13,27 @@ __pycache__/
 venv/
 env/
 ENV/
+*.egg-info/
+*.egg
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Uploads & Database
-uploads/
+# Database & Uploads
 *.db
 *.sqlite
 *.sqlite3
-
-# Logs
+uploads/
 *.log
+
+# Render
+.procfile
 EOF
