@@ -1,4 +1,3 @@
-cat > utils/hf_client.py << 'EOF'
 import httpx
 from config import settings
 from typing import Optional
@@ -27,10 +26,7 @@ class HFClient:
         url = f"{self.BASE_URL}/{model_name}"
         img_b64 = base64.b64encode(image_bytes).decode()
         async with httpx.AsyncClient(timeout=120) as client:
-            response = await client.post(url, headers=self.headers, json={
-                "inputs": prompt,
-                "parameters": {"image": img_b64, "num_inference_steps": 20, "guidance_scale": 7.5}
-            })
+            response = await client.post(url, headers=self.headers, json={"inputs": prompt, "parameters": {"image": img_b64, "num_inference_steps": 20, "guidance_scale": 7.5}})
             if response.status_code != 200:
                 raise Exception(f"HF API Error: {response.text}")
             return response.content
@@ -56,4 +52,3 @@ class HFClient:
         ]
 
 hf_client = HFClient()
-EOF
