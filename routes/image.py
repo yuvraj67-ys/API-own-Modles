@@ -20,7 +20,10 @@ async def generate_image(prompt: str = Form(...), user_id: str = Depends(verify_
         increment_usage(user_id, "imagegen")
         return {"success": True, "image_url": file_url, "prompt": prompt, "usage": {"used": used+1, "limit": limit}}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed: {str(e)}")
+        error_msg = str(e)
+        if "404" in error_msg or "not available" in error_msg:
+            raise HTTPException(status_code=503, detail=f"Model unavailable. Try: ByteDance/SDXL-Lightning")
+        raise HTTPException(status_code=500, detail=f"Failed: {error_msg}")
 
 @router.post("/imageedit")
 async def edit_image(prompt: str = Form(...), image: UploadFile = File(...), user_id: str = Depends(verify_api_key), aspect_ratio: str = Form("1:1")):
