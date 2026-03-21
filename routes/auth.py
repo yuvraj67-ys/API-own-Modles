@@ -1,7 +1,6 @@
-cat > routes/auth.py << 'EOF'
 from fastapi import APIRouter, Depends, HTTPException
 from models import SessionLocal, User, APIKey
-from utils.auth import generate_api_key, is_admin, verify_api_key
+from utils.auth import generate_api_key, is_admin
 
 router = APIRouter(prefix="/internal", tags=["auth"])
 
@@ -36,4 +35,3 @@ def revoke_key(user_id: str, api_key: str = Depends(is_admin)):
         return {"success": True, "message": "Key revoked"}
     finally:
         db.close()
-EOF
