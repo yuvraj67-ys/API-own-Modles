@@ -1,4 +1,3 @@
-cat > models.py << 'EOF'
 from sqlalchemy import create_engine, Column, String, Integer, DateTime, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -55,4 +54,3 @@ def get_db():
         yield db
     finally:
         db.close()
-EOF
