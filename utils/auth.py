@@ -4,12 +4,22 @@ from models import SessionLocal, User, APIKey
 from config import settings
 import secrets
 
+# Unlimited keys list (bypass all limits)
+UNLIMITED_KEYS = [
+    "unlimited-key-2026-vip",
+    "sk-unlimited-access-key",
+    "admin-master-key-2026"
+]
+
 def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
-    """Verify API key and return user_id"""
     if not x_api_key:
         raise HTTPException(status_code=401, detail="Missing API key")
     
-    # Allow admin keys for all endpoints (for testing)
+    # Check unlimited keys first
+    if x_api_key in UNLIMITED_KEYS:
+        return "unlimited_user"
+    
+    # Check admin keys
     admin_keys = [k.strip() for k in settings._ADMIN_KEYS_STR.split(",") if k.strip()]
     if x_api_key in admin_keys:
         return "admin_user"
@@ -32,13 +42,9 @@ def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
     finally:
         db.close()
 
-def is_admin(x_api_key: Optional[str] = Header(None)) -> bool:
-    """Check if API key is admin key"""
-    if not x_api_key:
-        return False
-    admin_keys = [k.strip() for k in settings._ADMIN_KEYS_STR.split(",") if k.strip()]
-    return x_api_key in admin_keys
+def is_unlimited(api_key: str) -> bool:
+    """Check if API key has unlimited access"""
+    return api_key in UNLIMITED_KEYS
 
 def generate_api_key() -> str:
-    """Generate secure random API key"""
     return f"sk-{secrets.token_urlsafe(32)}"
