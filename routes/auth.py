@@ -1,14 +1,20 @@
 from fastapi import APIRouter, Header, HTTPException
 from models import SessionLocal, User, APIKey
-from utils.auth import generate_api_key, is_admin
+from utils.auth import generate_api_key
 from config import settings
+
+# Hardcoded admin/unlimited keys
+ADMIN_KEYS = [
+    "admin-master-key-2026",
+    "unlimited-key-2026-vip",
+    "sk-unlimited-access-key"
+]
 
 router = APIRouter(prefix="/internal", tags=["auth"])
 
 @router.post("/create-key/{user_id}")
 def create_api_key(user_id: str, x_api_key: str = Header(None)):
-    admin_keys = [k.strip() for k in settings._ADMIN_KEYS_STR.split(",") if k.strip()]
-    if x_api_key not in admin_keys and x_api_key not in ["unlimited-key-2026-vip", "sk-unlimited-access-key", "admin-master-key-2026"]:
+    if x_api_key not in ADMIN_KEYS:
         raise HTTPException(status_code=403, detail="Admin required")
     
     db = SessionLocal()
@@ -32,8 +38,7 @@ def create_api_key(user_id: str, x_api_key: str = Header(None)):
 
 @router.post("/revoke-key/{user_id}")
 def revoke_key(user_id: str, x_api_key: str = Header(None)):
-    admin_keys = [k.strip() for k in settings._ADMIN_KEYS_STR.split(",") if k.strip()]
-    if x_api_key not in admin_keys and x_api_key not in ["unlimited-key-2026-vip", "sk-unlimited-access-key", "admin-master-key-2026"]:
+    if x_api_key not in ADMIN_KEYS:
         raise HTTPException(status_code=403, detail="Admin required")
     
     db = SessionLocal()
