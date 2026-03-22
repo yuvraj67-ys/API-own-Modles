@@ -2,7 +2,6 @@ from models import SessionLocal, Usage
 from datetime import datetime
 from config import settings
 
-# Unlimited keys (skip limit check)
 UNLIMITED_KEYS = [
     "unlimited-key-2026-vip",
     "sk-unlimited-access-key",
@@ -12,10 +11,9 @@ UNLIMITED_KEYS = [
 def get_today_str() -> str:
     return datetime.now().strftime("%Y-%m-%d")
 
-def check_limit(user_id: str, tool_name: str, db=None, api_key: str = None) -> tuple:
-    # Skip limit check for unlimited keys
+def check_limit(user_id: str, tool_name: str, db=None, api_key: str = None):
     if api_key and api_key in UNLIMITED_KEYS:
-        return True, 0, 999999  # Unlimited
+        return True, 0, 999999
     
     close_db = False
     if db is None:
@@ -41,9 +39,8 @@ def check_limit(user_id: str, tool_name: str, db=None, api_key: str = None) -> t
             db.close()
 
 def increment_usage(user_id: str, tool_name: str, db=None, api_key: str = None):
-    # Skip increment for unlimited keys
     if api_key and api_key in UNLIMITED_KEYS:
-        return  # Don't track usage
+        return
     
     close_db = False
     if db is None:
@@ -64,8 +61,7 @@ def increment_usage(user_id: str, tool_name: str, db=None, api_key: str = None):
         if close_db:
             db.close()
 
-def get_usage_summary(user_id: str, api_key: str = None) -> dict:
-    # Return unlimited for VIP keys
+def get_usage_summary(user_id: str, api_key: str = None):
     if api_key and api_key in UNLIMITED_KEYS:
         return {
             "imagegen": {"used": 0, "limit": 999999, "remaining": 999999},
@@ -75,7 +71,6 @@ def get_usage_summary(user_id: str, api_key: str = None) -> dict:
     
     db = SessionLocal()
     try:
-        today = get_today_str()
         tools = ["imagegen", "imageedit", "songgen"]
         summary = {}
         for tool in tools:
