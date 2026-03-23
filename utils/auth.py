@@ -3,7 +3,7 @@ from typing import Optional
 from models import SessionLocal, User, APIKey
 import secrets
 
-# HARD CODED UNLIMITED KEYS
+# UNLIMITED KEYS LIST
 UNLIMITED_KEYS = [
     "admin-master-key-2026",
     "unlimited-key-2026-vip",
@@ -14,11 +14,9 @@ def verify_api_key(x_api_key: Optional[str] = Header(None)) -> str:
     if not x_api_key:
         raise HTTPException(status_code=401, detail="Missing API key")
     
-    # Check unlimited keys
     if x_api_key in UNLIMITED_KEYS:
         return "unlimited_user"
     
-    # Check database
     db = SessionLocal()
     try:
         key_record = db.query(APIKey).filter(
