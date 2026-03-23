@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Depends
 from models import SessionLocal, User, APIKey
-from utils.auth import generate_api_key
+from utils.auth import generate_api_key, verify_api_key
 
-# UNLIMITED ADMIN KEYS
-ADMIN_KEYS = [
+# UNLIMITED KEYS
+UNLIMITED_KEYS = [
     "admin-master-key-2026",
     "unlimited-key-2026-vip",
     "sk-unlimited-access-key"
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/internal", tags=["auth"])
 
 @router.post("/create-key/{user_id}")
 def create_api_key(user_id: str, x_api_key: str = Header(None)):
-    if x_api_key not in ADMIN_KEYS:
+    if x_api_key not in UNLIMITED_KEYS:
         raise HTTPException(status_code=403, detail="Admin required")
     
     db = SessionLocal()
@@ -37,7 +37,7 @@ def create_api_key(user_id: str, x_api_key: str = Header(None)):
 
 @router.post("/revoke-key/{user_id}")
 def revoke_key(user_id: str, x_api_key: str = Header(None)):
-    if x_api_key not in ADMIN_KEYS:
+    if x_api_key not in UNLIMITED_KEYS:
         raise HTTPException(status_code=403, detail="Admin required")
     
     db = SessionLocal()
