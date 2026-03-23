@@ -1,7 +1,7 @@
 from models import SessionLocal, Usage
 from datetime import datetime
 
-# UNLIMITED KEYS LIST
+# UNLIMITED KEYS
 UNLIMITED_KEYS = [
     "admin-master-key-2026",
     "unlimited-key-2026-vip",
