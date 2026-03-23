@@ -22,9 +22,9 @@ def check_limit(user_id: str, tool_name: str, db=None, api_key: str = None):
         close_db = True
     try:
         limits = {
-            "imagegen": 10,
-            "imageedit": 5,
-            "songgen": 3,
+            "imagegen": 999999,
+            "imageedit": 999999,
+            "songgen": 999999,
         }
         daily_limit = limits.get(tool_name, 10)
         today = get_today_str()
