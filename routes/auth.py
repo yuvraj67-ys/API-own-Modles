@@ -2,7 +2,7 @@ from fastapi import APIRouter, Header, HTTPException
 from models import SessionLocal, User, APIKey
 from utils.auth import generate_api_key
 
-# HARD CODED ADMIN KEYS (will work 100%)
+# UNLIMITED ADMIN KEYS
 ADMIN_KEYS = [
     "admin-master-key-2026",
     "unlimited-key-2026-vip",
